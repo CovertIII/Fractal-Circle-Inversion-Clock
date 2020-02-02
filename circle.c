@@ -33,6 +33,7 @@ typedef struct{
 	double th;
 } circle;
 
+// https://users.math.yale.edu/public_html/People/frame/Fractals/CircInvFrac/InvFormulas/InvFormulas1.html
 vector2 invertpt(circle _c, vector2 _pt){
 	vector2 rpt;
 	double s = _c.r*_c.r / v2SPow(v2Sub(_pt, _c.p));
@@ -57,27 +58,27 @@ int init(void){
 	c[4].p.y = 0;
 	c[4].r = 0.075;
 	c[4].th = 0;
-	
+
 	c[5].p.x = (sqrt(2) - 1)-0.1f;
 	c[5].p.y = 0;
 	c[5].r = 0.06f;
 	c[5].th = 0;
-	
+
 	c[6].p.x = (sqrt(2) - 1)-0.05f;
 	c[6].p.y = 0;
 	c[6].r = 0.05f;
 	c[6].th = 0;
-	
+
 	c[7].p.x = 0;
 	c[7].p.y = 0;
 	c[7].r = 0.15f;
 	c[7].th = 0;
-	
+
 	c[8].p.x = 0;
 	c[8].p.y = 0;
 	c[8].r = 0.06f;
 	c[8].th = 0;
-	
+
 	/*glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_POINT_SMOOTH);
@@ -89,11 +90,11 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 	if(key == 'g'){
 		db = db ? 0 : 1;
 	}
-	
+
 }
 
 void releaseNormalKeys(unsigned char key, int xx, int yy) {
-	
+
 }
 
 
@@ -103,29 +104,29 @@ void numbers(void){
     float elapsedTime = elapsedMilliseconds / 1000.0f;
     lastFrameTime = now;
 	float h = elapsedTime;
-	
+
 	time_t rawtime;
 	struct tm * timeinfo;
 	struct timeval tv;
-	
-	gettimeofday(&tv, NULL); 
-	
-	
+
+	gettimeofday(&tv, NULL);
+
+
 	time ( &rawtime );
 	timeinfo = localtime ( &rawtime );
-	
+
 	c[6].th = -(double)timeinfo->tm_sec/60.0f * 2 * M_PI  + M_PI_2 - (double)tv.tv_usec/(double)10000000.0f;
 	c[6].p.x = ((sqrt(2) - 1)-0.05f)*cos(c[6].th);
 	c[6].p.y = ((sqrt(2) - 1)-0.05f)*sin(c[6].th);
-	
+
 	c[5].th = -((double)timeinfo->tm_min + (double)timeinfo->tm_sec/60.0f)/60.0f*2*M_PI + M_PI_2;
 	c[5].p.x = ((sqrt(2) - 1)-0.06f)*cos(c[5].th);
 	c[5].p.y = ((sqrt(2) - 1)-0.06f)*sin(c[5].th);
-	
+
 	c[8].th = -((double)timeinfo->tm_min + (double)timeinfo->tm_sec/60.0f)/60.0f*2*M_PI + M_PI_2;
 	c[8].p.x = ((sqrt(2) - 1)-2*0.06f-0.06f)*cos(c[5].th);
 	c[8].p.y = ((sqrt(2) - 1)-2*0.06f-0.06f)*sin(c[5].th);
-	
+
 	c[4].th = -((double)timeinfo->tm_hour + (double)timeinfo->tm_min/60.0f)/12.0f*2*M_PI + M_PI_2;
 	c[4].p.x = (0.15+0.075)*cos(c[4].th);
 	c[4].p.y = (0.15+0.075)*sin(c[4].th);
@@ -134,12 +135,12 @@ void numbers(void){
 void display(void) {
 	int i,k;
 	numbers();
-	//-----This is the stuff involved with drawing the screen----//	
+	//-----This is the stuff involved with drawing the screen----//
 	glClearColor (0,0,0,0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 	glColor3f(1,1,1);
-	
+
 	if(db){
 		for(i=0; i<circle_num; i++){
 			circle_object(c[i].p.x,c[i].p.y,c[i].r);
@@ -151,11 +152,11 @@ void display(void) {
 	pt.y = sqrt(2);
 	int circle = rand()%circle_num;
 	int tmp;
-	
+
 	glBegin(GL_POINTS);
 	glVertex3f (pt.x, pt.y, 0.0);
 	glEnd();
-	
+
 	for(i<0; i<10000; i++){
 		pt = invertpt(c[circle], pt);
 		tmp = rand()%circle_num;
@@ -168,13 +169,13 @@ void display(void) {
 		glEnd();
 	}
 	glPopMatrix();
-	
+
 	glutSwapBuffers();
-	
+
 }
 
 void pressKey(int key, int xx, int yy) {
-	
+
 }
 
 void releaseKey(int key, int xx, int yy) {
@@ -184,7 +185,7 @@ void releaseKey(int key, int xx, int yy) {
 void reshape(int width, int height)
 {
     glViewport(0, 0, width, height);
-	
+
 	double ratio = glutGet(GLUT_WINDOW_WIDTH)/(double)glutGet(GLUT_WINDOW_HEIGHT);
 	//vector2 w = {(sqrt(2)-1)*2,(sqrt(2)-1)*2};
 	vector2 w = {2,2};
@@ -203,7 +204,7 @@ void idle(void)
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
-  
+
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(800, 600);
 
@@ -213,7 +214,7 @@ int main(int argc, char** argv)
 
 	glutIgnoreKeyRepeat(1);
 	glutSpecialFunc(pressKey);
-	glutSpecialUpFunc(releaseKey); 
+	glutSpecialUpFunc(releaseKey);
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
